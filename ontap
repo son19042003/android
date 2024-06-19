@@ -1,0 +1,123 @@
+public class MainActivity extends AppCompatActivity {
+
+    ActivityMainBinding binding;
+    ExecutorService executorService;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        executorService = Executors.newSingleThreadExecutor();
+        addEvents();
+    }
+
+    private void addEvents() {
+        binding.btnDraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.containView.removeAllViews();
+                executeLongRunningTask();
+            }
+        });
+    }
+
+    private void executeLongRunningTask() {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                int numOfViews = Integer.parseInt(binding.EdtNum.getText().toString());
+                Random random = new Random();
+                for(int i = 1; i <= numOfViews; i++) {
+                    final int percent, randNum, numRow;
+                    percent = i * 100 /numOfViews;
+                    randNum = random.nextInt(101);
+                    numRow = i;
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LinearLayout buttonLayout = new LinearLayout(MainActivity.this);
+                            buttonLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                            buttonLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+                            buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
+                            buttonLayout.setWeightSum(1f);
+
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f);
+                            params.setMargins(15, 20, 15, 20);
+
+                            Button button = new Button(MainActivity.this);
+
+                            button.setLayoutParams(params);
+                            button.setText(String.valueOf(randNum));
+                            button.setTextSize(26);
+                            button.setTextColor(Color.WHITE);
+                            button.setGravity(Gravity.CENTER);
+
+                            if(numRow % 2 == 0) {
+                                buttonLayout.setGravity(Gravity.END);
+                                button.setBackgroundColor(Color.YELLOW);
+                            }
+                            else {
+                                buttonLayout.setGravity(Gravity.START);
+                                button.setBackgroundColor(Color.GREEN);
+                            }
+
+                            buttonLayout.addView(button);
+                            binding.containView.addView(buttonLayout);
+                        }
+                    });
+                }
+            }
+        });
+    }
+}
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnDraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Draw Button"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/EdtNum"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text=""/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/containView"
+            android:orientation="vertical"
+            android:weightSum="1">
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
