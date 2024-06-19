@@ -121,3 +121,32 @@ public class MainActivity extends AppCompatActivity {
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
+
+<ProgressBar
+        android:id="@+id/pbPercent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_marginTop="10dp"/>
+
+
+runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.txtPercent.setText(percent + "%");
+                            binding.pbPercent.setProgress(percent);
+
+binding.containerLayout.addView(textView);
+
+                            if(percent == 100) {
+                                binding.txtPercent.setText("DONE!");
+                            }
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(100);
+                    }
+                    catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
