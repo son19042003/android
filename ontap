@@ -69,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
                             binding.containView.addView(buttonLayout);
                         }
                     });
+
+                    try {
+                        Thread.sleep(100);
+                    }
+                    catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             }
         });
@@ -122,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
     </ScrollView>
 </LinearLayout>
 
+
+//có progressBar
 <ProgressBar
         android:id="@+id/pbPercent"
         android:layout_width="match_parent"
@@ -137,16 +146,8 @@ runOnUiThread(new Runnable() {
                             binding.pbPercent.setProgress(percent);
 
 binding.containerLayout.addView(textView);
-
                             if(percent == 100) {
                                 binding.txtPercent.setText("DONE!");
                             }
                         }
                     });
-
-                    try {
-                        Thread.sleep(100);
-                    }
-                    catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
